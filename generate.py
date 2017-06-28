@@ -165,7 +165,7 @@ for diary_n, (diary_key, diary) in enumerate(diaries.items(), start=1):
                 'location': {
                     'standard': upload_url,
                 },
-                'group': diary['name'],
+                'group_name': diary['name'],
                 'metadata': {
                     'tna_id': diary['IAID'],
                     'original_size': {
