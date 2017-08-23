@@ -89,7 +89,7 @@ for diary_n, (diary_key, diary) in enumerate(diaries.items(), start=1):
         UPLOAD_PREFIX,
         diary_prefix,
     )
-    json_out.append({
+    group_metadata = {
         'type': 'group',
         'name': diary['name'],
         'metadata': {
@@ -100,7 +100,9 @@ for diary_n, (diary_key, diary) in enumerate(diaries.items(), start=1):
             'start_date': diary['CoveringFromDate'].strftime(OUT_DATE_FORMAT),
             'end_date': diary['CoveringToDate'].strftime(OUT_DATE_FORMAT),
         },
-    })
+    }
+    subject_metadata = []
+    lowest_page_number = None
     processed_images = [
         s3_object['Key'] for s3_object in s3_client.list_objects_v2(
             Bucket=UPLOAD_BUCKET,
@@ -160,7 +162,8 @@ for diary_n, (diary_key, diary) in enumerate(diaries.items(), start=1):
                             Key=upload_key,
                         )
 
-            json_out.append({
+            page_number = int(file_match.group('page_number'))
+            subject_metadata.append({
                 'type': 'subject',
                 'location': {
                     'standard': upload_url,
@@ -178,9 +181,15 @@ for diary_n, (diary_key, diary) in enumerate(diaries.items(), start=1):
                         'height': new_height,
                     },
                     'file_name': os.path.join(diary_prefix, file_name),
-                    'page_number': int(file_match.group('page_number')),
+                    'page_number': page_number,
                 },
             })
+            if not lowest_page_number or page_number < lowest_page_number:
+                lowest_page_number = page_number
+
+    group_metadata['metadata']['page_offset'] = lowest_page_number - 1
+    json_out.append(group_metadata)
+    json_out += subject_metadata
 
 s3_client.put_object(
     ACL='public-read',
