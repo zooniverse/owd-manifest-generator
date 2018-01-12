@@ -2,7 +2,9 @@
 Generates Ouroboros manifests for Operation War Diary
 
 This assumes you have diary metadata in `diaries.tsv` and additional diary
-metadata in `extra.tsv`, along with images on the local filesystem.
+metadata in `extra.tsv`, along with images on the local filesystem. A default
+`extra.tsv` is included in this repo, and will be automatically used by the
+Docker image if not overridden.
 
 The following command will resize those images, upload them to S3, and produce a
 JSON Ouroboros manifest on S3:
