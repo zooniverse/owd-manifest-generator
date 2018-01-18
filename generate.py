@@ -91,7 +91,10 @@ for diary_n, (diary_key, diary) in enumerate(diaries.items(), start=1):
     )
     group_metadata = {
         'type': 'group',
-        'name': diary['name'],
+        'name': "{} ({})".format(
+            diary['name'],
+            diary['CoveringFromDate'].year,
+        ),
         'metadata': {
             'id': diary['IAID'],
             'source': diary_prefix,
