@@ -93,7 +93,7 @@ for diary_n, (diary_key, diary) in enumerate(diaries.items(), start=1):
         'type': 'group',
         'name': "{} ({})".format(
             diary['name'],
-            diary['CoveringFromDate'].year,
+            diary['CoveringFromDate'].strftime('%Y-%m-%d'),
         ),
         'metadata': {
             'id': diary['IAID'],
